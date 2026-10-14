@@ -1016,8 +1016,8 @@
                     <section class="panel endpoint-panel">
                         <div class="section-label"><label for="endpoint">API base URL</label><span
                                 class="endpoint-state">Not connected</span></div>
-                        <input id="endpoint" class="endpoint-input" type="url" value="http://localhost:8000"
-                            autocomplete="url" spellcheck="false">
+                        <input id="endpoint" class="endpoint-input" type="url"
+                            value="https://d16mi61bdk4mg3.cloudfront.net" autocomplete="url" spellcheck="false">
                         <p class="endpoint-caption">The page calls <code>/predict</code> and <code>/predict/csv</code>
                             on this base URL. For AWS, include any API stage in the base URL.</p>
                     </section>
@@ -1093,7 +1093,7 @@
         const savedEndpoint = localStorage.getItem("fieldwork-api-endpoint");
         if (savedEndpoint) endpoint.value = savedEndpoint;
         endpoint.addEventListener("change", () => {
-            try { localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim()); } catch { }
+            try {localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim());} catch { }
         });
 
         document.querySelectorAll("[role=tab]").forEach((tab) => {
@@ -1147,7 +1147,7 @@
             for (let index = 0; index < text.length; index += 1) {
                 const character = text[index];
                 if (character === '"') {
-                    if (quoted && text[index + 1] === '"') { cell += '"'; index += 1; }
+                    if (quoted && text[index + 1] === '"') {cell += '"'; index += 1;}
                     else quoted = !quoted;
                 } else if (character === delimiter && !quoted) {
                     row.push(cell.trim()); cell = "";
@@ -1191,7 +1191,7 @@
                 }
                 return record;
             });
-            return { headers, records };
+            return {headers, records};
         }
 
         function renderPreview(headers, records) {
@@ -1222,7 +1222,7 @@
             selectedCsvFile = file;
             csvPredictButton.disabled = true;
             file.text().then((text) => {
-                const { headers, records } = parseCsv(text);
+                const {headers, records} = parseCsv(text);
                 renderPreview(headers, records);
             }).catch((error) => {
                 document.querySelector("#csv-preview").classList.add("hidden");
@@ -1236,10 +1236,10 @@
         fileInput.addEventListener("change", () => handleCsvFile(fileInput.files[0]));
         const dropzone = document.querySelector("#dropzone");
         for (const eventName of ["dragenter", "dragover"]) {
-            dropzone.addEventListener(eventName, (event) => { event.preventDefault(); dropzone.classList.add("dragover"); });
+            dropzone.addEventListener(eventName, (event) => {event.preventDefault(); dropzone.classList.add("dragover");});
         }
         for (const eventName of ["dragleave", "drop"]) {
-            dropzone.addEventListener(eventName, (event) => { event.preventDefault(); dropzone.classList.remove("dragover"); });
+            dropzone.addEventListener(eventName, (event) => {event.preventDefault(); dropzone.classList.remove("dragover");});
         }
         dropzone.addEventListener("drop", (event) => handleCsvFile(event.dataTransfer.files[0]));
 
@@ -1274,7 +1274,7 @@
             try {
                 const url = new URL(endpoint.value.trim());
                 if (!["http:", "https:"].includes(url.protocol)) throw new Error();
-                try { localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim()); } catch { }
+                try {localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim());} catch { }
                 return true;
             } catch {
                 showToast("Enter a valid HTTP or HTTPS API base URL.");
@@ -1290,7 +1290,7 @@
             try {
                 const response = await fetch(apiUrl("/predict"), {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(record)
                 });
                 renderPredictions([await readApiResponse(response)], 1);

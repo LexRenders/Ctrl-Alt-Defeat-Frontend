@@ -907,8 +907,8 @@
                 <div>
                     <p class="eyebrow">Inference workspace / 01</p>
                     <h1 id="page-title">Read the specimen.</h1>
-                    <p class="intro-copy">Describe a mushroom or bring a dataset. The classifier returns an edibility
-                        prediction from its measured and observed features.</p>
+                    <p class="intro-copy">Enter the measurements and observed traits, or upload a dataset, to get an
+                        edibility prediction from the trained classifier.</p>
                 </div>
                 <div class="model-switch" role="group" aria-label="Choose a model">
                     <button class="model-button" type="button" aria-pressed="true"><span class="model-index">01</span>
@@ -924,7 +924,7 @@
                         <div>
                             <p class="step-label">SPECIMEN INPUT</p>
                             <h2 id="input-title">Build an observation</h2>
-                            <p>Use the feature codes from the Secondary Mushroom dataset.</p>
+                            <p>Enter the nine features used by the deployed model.</p>
                         </div>
                         <div class="mode-tabs" role="tablist" aria-label="Input method">
                             <button id="form-tab" type="button" role="tab" aria-selected="true"
@@ -937,36 +937,12 @@
                     <div id="form-pane" role="tabpanel" aria-labelledby="form-tab">
                         <form id="specimen-form" class="form-body">
                             <div class="group">
-                                <h3 class="group-title">Cap</h3>
+                                <h3 class="group-title">Measurements</h3>
                                 <div class="fields">
                                     <div class="field"><label for="cap-diameter">Cap diameter <span class="unit">cm <i
                                                     class="required-mark">*</i></span></label><input id="cap-diameter"
                                             name="cap-diameter" type="number" step="any" min="0" placeholder="e.g. 4.2"
                                             required></div>
-                                    <div class="field"><label for="cap-shape">Shape</label><select id="cap-shape"
-                                            name="cap-shape"></select></div>
-                                    <div class="field"><label for="cap-surface">Surface</label><select id="cap-surface"
-                                            name="cap-surface"></select></div>
-                                    <div class="field"><label for="cap-color">Color</label><select id="cap-color"
-                                            name="cap-color"></select></div>
-                                    <div class="field"><label for="does-bruise-or-bleed">Bruises / bleeds</label><select
-                                            id="does-bruise-or-bleed" name="does-bruise-or-bleed"></select></div>
-                                </div>
-                            </div>
-                            <div class="group">
-                                <h3 class="group-title">Gills</h3>
-                                <div class="fields">
-                                    <div class="field"><label for="gill-attachment">Attachment</label><select
-                                            id="gill-attachment" name="gill-attachment"></select></div>
-                                    <div class="field"><label for="gill-spacing">Spacing</label><select
-                                            id="gill-spacing" name="gill-spacing"></select></div>
-                                    <div class="field"><label for="gill-color">Color</label><select id="gill-color"
-                                            name="gill-color"></select></div>
-                                </div>
-                            </div>
-                            <div class="group">
-                                <h3 class="group-title">Stem</h3>
-                                <div class="fields">
                                     <div class="field"><label for="stem-height">Height <span class="unit">cm <i
                                                     class="required-mark">*</i></span></label><input id="stem-height"
                                             name="stem-height" type="number" step="any" min="0" placeholder="e.g. 5.8"
@@ -975,32 +951,19 @@
                                                     class="required-mark">*</i></span></label><input id="stem-width"
                                             name="stem-width" type="number" step="any" min="0" placeholder="e.g. 8.1"
                                             required></div>
-                                    <div class="field"><label for="stem-root">Root</label><select id="stem-root"
-                                            name="stem-root"></select></div>
-                                    <div class="field"><label for="stem-surface">Surface</label><select
-                                            id="stem-surface" name="stem-surface"></select></div>
-                                    <div class="field"><label for="stem-color">Color</label><select id="stem-color"
-                                            name="stem-color"></select></div>
                                 </div>
                             </div>
                             <div class="group">
-                                <h3 class="group-title">Veil &amp; ring</h3>
+                                <h3 class="group-title">Observed traits</h3>
                                 <div class="fields">
-                                    <div class="field"><label for="veil-type">Veil type</label><select id="veil-type"
-                                            name="veil-type"></select></div>
-                                    <div class="field"><label for="veil-color">Veil color</label><select id="veil-color"
-                                            name="veil-color"></select></div>
-                                    <div class="field"><label for="has-ring">Has ring</label><select id="has-ring"
-                                            name="has-ring"></select></div>
+                                    <div class="field"><label for="gill-color">Gill color</label><select id="gill-color"
+                                            name="gill-color"></select></div>
+                                    <div class="field"><label for="cap-shape">Cap shape</label><select id="cap-shape"
+                                            name="cap-shape"></select></div>
+                                    <div class="field"><label for="stem-surface">Stem surface</label><select
+                                            id="stem-surface" name="stem-surface"></select></div>
                                     <div class="field"><label for="ring-type">Ring type</label><select id="ring-type"
                                             name="ring-type"></select></div>
-                                </div>
-                            </div>
-                            <div class="group">
-                                <h3 class="group-title">Spore &amp; setting</h3>
-                                <div class="fields">
-                                    <div class="field"><label for="spore-print-color">Spore print color</label><select
-                                            id="spore-print-color" name="spore-print-color"></select></div>
                                     <div class="field"><label for="habitat">Habitat</label><select id="habitat"
                                             name="habitat"></select></div>
                                     <div class="field"><label for="season">Season</label><select id="season"
@@ -1009,7 +972,7 @@
                             </div>
                             <div class="submit-row">
                                 <p class="subtle-note"><span class="required-mark">*</span> Required measurements.
-                                    Unobserved categorical fields stay blank.</p>
+                                    Choose “Unknown” when a trait cannot be identified.</p>
                                 <button class="primary-button" type="submit">Predict specimen <span
                                         aria-hidden="true">→</span></button>
                             </div>
@@ -1022,9 +985,8 @@
                                 <div>
                                     <div class="upload-symbol" aria-hidden="true">↥</div>
                                     <strong>Drop a mushroom CSV here</strong>
-                                    <p>Headers should match the Secondary Mushroom dataset. Comma- and
-                                        semicolon-delimited files are supported. A <code>class</code> target column is
-                                        ignored.</p>
+                                    <p>Include all nine model feature columns. Comma-delimited CSV is sent directly to
+                                        the API; extra columns such as <code>class</code> are ignored.</p>
                                     <input class="file-picker" type="file" id="csv-file" accept=".csv,text/csv">
                                     <label class="file-label" for="csv-file">Choose CSV file</label>
                                 </div>
@@ -1041,7 +1003,8 @@
                                     style="margin:12px 0 0"></div>
                             </div>
                             <div class="upload-footer">
-                                <p class="subtle-note">Each valid row is sent as its own JSON object.</p>
+                                <p class="subtle-note">The API validates and predicts every row in the uploaded file.
+                                </p>
                                 <button id="predict-csv" class="primary-button" type="button" disabled>Predict rows
                                     <span aria-hidden="true">→</span></button>
                             </div>
@@ -1051,12 +1014,12 @@
 
                 <aside class="side-column" aria-label="Endpoint and prediction results">
                     <section class="panel endpoint-panel">
-                        <div class="section-label"><label for="endpoint">API endpoint</label><span
+                        <div class="section-label"><label for="endpoint">API base URL</label><span
                                 class="endpoint-state">Not connected</span></div>
-                        <input id="endpoint" class="endpoint-input" type="url" value="http://localhost:8000/predict"
+                        <input id="endpoint" class="endpoint-input" type="url" value="http://localhost:8000"
                             autocomplete="url" spellcheck="false">
-                        <p class="endpoint-caption">POST JSON feature objects to this URL. Expected shape:
-                            <code>{"cap-diameter": 4.2, ...}</code></p>
+                        <p class="endpoint-caption">The page calls <code>/predict</code> and <code>/predict/csv</code>
+                            on this base URL. For AWS, include any API stage in the base URL.</p>
                     </section>
 
                     <section class="panel result-panel" aria-live="polite" aria-labelledby="result-title">
@@ -1075,9 +1038,8 @@
 
                     <section class="notice">
                         <strong>Model availability</strong>
-                        <p>Mushroom inference is ready to connect. The API and Citi Bike model are not included in this
-                            workspace. Predictions require a running endpoint that accepts one feature object per
-                            request.</p>
+                        <p>Mushroom inference uses the deployed API. The Citi Bike model is not available yet. Model
+                            predictions are not food-safety advice.</p>
                     </section>
                 </aside>
             </section>
@@ -1090,30 +1052,18 @@
 
     <script>
         const features = [
-            "cap-diameter", "cap-shape", "cap-surface", "cap-color", "does-bruise-or-bleed",
-            "gill-attachment", "gill-spacing", "gill-color", "stem-height", "stem-width",
-            "stem-root", "stem-surface", "stem-color", "veil-type", "veil-color", "has-ring",
-            "ring-type", "spore-print-color", "habitat", "season"
+            "cap-diameter", "stem-height", "stem-width", "gill-color", "habitat",
+            "season", "ring-type", "cap-shape", "stem-surface"
         ];
 
+        const numericFeatures = new Set(["cap-diameter", "stem-height", "stem-width"]);
         const options = {
-            "cap-shape": [["b", "Bell"], ["c", "Conical"], ["x", "Convex"], ["f", "Flat"], ["s", "Sunken"], ["p", "Spherical"], ["o", "Other"]],
-            "cap-surface": [["i", "Fibrous"], ["g", "Grooves"], ["y", "Scaly"], ["s", "Smooth"], ["h", "Shiny"], ["l", "Leathery"], ["k", "Silky"], ["t", "Sticky"], ["w", "Wrinkled"], ["e", "Fleshy"]],
-            "cap-color": [["n", "Brown"], ["b", "Buff"], ["g", "Gray"], ["r", "Green"], ["p", "Pink"], ["u", "Purple"], ["e", "Red"], ["w", "White"], ["y", "Yellow"], ["l", "Blue"], ["o", "Orange"], ["k", "Black"]],
-            "does-bruise-or-bleed": [["t", "Yes"], ["f", "No"]],
-            "gill-attachment": [["a", "Adnate"], ["x", "Adnexed"], ["d", "Decurrent"], ["e", "Free"], ["s", "Sinuate"], ["p", "Pores"], ["f", "None"], ["?", "Unknown"]],
-            "gill-spacing": [["c", "Close"], ["d", "Distant"], ["f", "None"]],
-            "gill-color": [["n", "Brown"], ["b", "Buff"], ["g", "Gray"], ["r", "Green"], ["p", "Pink"], ["u", "Purple"], ["e", "Red"], ["w", "White"], ["y", "Yellow"], ["l", "Blue"], ["o", "Orange"], ["k", "Black"], ["f", "None"]],
-            "stem-root": [["b", "Bulbous"], ["s", "Swollen"], ["c", "Club"], ["u", "Cup"], ["e", "Equal"], ["z", "Rhizomorphs"], ["r", "Rooted"]],
-            "stem-surface": [["i", "Fibrous"], ["g", "Grooves"], ["y", "Scaly"], ["s", "Smooth"], ["h", "Shiny"], ["l", "Leathery"], ["k", "Silky"], ["t", "Sticky"], ["w", "Wrinkled"], ["e", "Fleshy"], ["f", "None"]],
-            "stem-color": [["n", "Brown"], ["b", "Buff"], ["g", "Gray"], ["r", "Green"], ["p", "Pink"], ["u", "Purple"], ["e", "Red"], ["w", "White"], ["y", "Yellow"], ["l", "Blue"], ["o", "Orange"], ["k", "Black"], ["f", "None"]],
-            "veil-type": [["p", "Partial"], ["u", "Universal"]],
-            "veil-color": [["n", "Brown"], ["b", "Buff"], ["g", "Gray"], ["r", "Green"], ["p", "Pink"], ["u", "Purple"], ["e", "Red"], ["w", "White"], ["y", "Yellow"], ["l", "Blue"], ["o", "Orange"], ["k", "Black"], ["f", "None"]],
-            "has-ring": [["t", "Yes"], ["f", "No"]],
-            "ring-type": [["c", "Cobwebby"], ["e", "Evanescent"], ["r", "Flaring"], ["g", "Grooved"], ["l", "Large"], ["p", "Pendant"], ["s", "Sheathing"], ["z", "Zone"], ["y", "Scaly"], ["m", "Movable"], ["f", "None"], ["?", "Unknown"]],
-            "spore-print-color": [["n", "Brown"], ["b", "Buff"], ["g", "Gray"], ["r", "Green"], ["p", "Pink"], ["u", "Purple"], ["e", "Red"], ["w", "White"], ["y", "Yellow"], ["l", "Blue"], ["o", "Orange"], ["k", "Black"]],
-            "habitat": [["g", "Grasses"], ["l", "Leaves"], ["m", "Meadows"], ["p", "Paths"], ["h", "Heaths"], ["u", "Urban"], ["w", "Waste"], ["d", "Woods"]],
-            "season": [["s", "Spring"], ["u", "Summer"], ["a", "Autumn"], ["w", "Winter"]]
+            "gill-color": [["b", "Buff"], ["e", "Red"], ["f", "None"], ["g", "Gray"], ["k", "Black"], ["n", "Brown"], ["o", "Orange"], ["p", "Pink"], ["r", "Green"], ["u", "Purple"], ["w", "White"], ["y", "Yellow"]],
+            "habitat": [["d", "Woods"], ["g", "Grasses"], ["h", "Heaths"], ["l", "Leaves"], ["m", "Meadows"], ["p", "Paths"], ["u", "Urban"], ["w", "Waste"]],
+            "season": [["a", "Autumn"], ["s", "Spring"], ["u", "Summer"], ["w", "Winter"]],
+            "ring-type": [["e", "Evanescent"], ["f", "None"], ["g", "Grooved"], ["l", "Large"], ["m", "Movable"], ["p", "Pendant"], ["r", "Flaring"], ["z", "Zone"]],
+            "cap-shape": [["b", "Bell"], ["c", "Conical"], ["f", "Flat"], ["o", "Other"], ["p", "Spherical"], ["s", "Sunken"], ["x", "Convex"]],
+            "stem-surface": [["f", "None"], ["g", "Grooves"], ["h", "Shiny"], ["i", "Fibrous"], ["k", "Silky"], ["s", "Smooth"], ["t", "Sticky"], ["y", "Scaly"]]
         };
 
         const form = document.querySelector("#specimen-form");
@@ -1122,14 +1072,15 @@
         const resultSubtitle = document.querySelector("#result-subtitle");
         const fileInput = document.querySelector("#csv-file");
         const csvPredictButton = document.querySelector("#predict-csv");
-        let csvRows = [];
+        let selectedCsvFile = null;
         let toastTimer;
 
         for (const [name, values] of Object.entries(options)) {
             const select = form.elements.namedItem(name);
             const emptyOption = document.createElement("option");
-            emptyOption.value = "";
-            emptyOption.textContent = "Not recorded";
+            emptyOption.value = "unknown";
+            emptyOption.textContent = "Unknown";
+            emptyOption.selected = true;
             select.append(emptyOption);
             for (const [value, label] of values) {
                 const option = document.createElement("option");
@@ -1141,7 +1092,9 @@
 
         const savedEndpoint = localStorage.getItem("fieldwork-api-endpoint");
         if (savedEndpoint) endpoint.value = savedEndpoint;
-        endpoint.addEventListener("change", () => localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim()));
+        endpoint.addEventListener("change", () => {
+            try { localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim()); } catch { }
+        });
 
         document.querySelectorAll("[role=tab]").forEach((tab) => {
             tab.addEventListener("click", () => {
@@ -1167,8 +1120,23 @@
             button.textContent = busy ? label : button.dataset.originalLabel;
         }
 
-        function canonicalHeader(header) {
-            return header.trim().toLowerCase().replace(/[_\s]+/g, "-").replace(/-+/g, "-");
+        function apiUrl(path) {
+            const url = new URL(endpoint.value.trim());
+            url.pathname = url.pathname
+                .replace(/\/+$/, "")
+                .replace(/\/predict(?:\/csv)?$/, "") + path;
+            url.search = "";
+            url.hash = "";
+            return url.toString();
+        }
+
+        async function readApiResponse(response) {
+            const body = await response.json().catch(() => null);
+            if (!response.ok) {
+                const detail = body?.detail ?? body?.message;
+                throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail) || `HTTP ${response.status}`);
+            }
+            return body;
         }
 
         function parseDelimited(text, delimiter) {
@@ -1200,9 +1168,10 @@
             const firstLine = text.split(/\r?\n/, 1)[0] || "";
             const semicolons = (firstLine.match(/;/g) || []).length;
             const commas = (firstLine.match(/,/g) || []).length;
-            const parsed = parseDelimited(text.replace(/^\uFEFF/, ""), semicolons > commas ? ";" : ",");
+            if (semicolons > commas) throw new Error("Use a comma-delimited CSV file.");
+            const parsed = parseDelimited(text.replace(/^\uFEFF/, ""), ",");
             if (parsed.length < 2) throw new Error("The file needs a header row and at least one data row.");
-            const headers = parsed[0].map(canonicalHeader);
+            const headers = parsed[0].map((header) => header.trim());
             const missing = features.filter((feature) => !headers.includes(feature));
             if (missing.length) throw new Error(`Missing feature columns: ${missing.join(", ")}`);
             const records = parsed.slice(1).map((values, index) => {
@@ -1210,10 +1179,10 @@
                 for (const feature of features) {
                     const columnIndex = headers.indexOf(feature);
                     const value = (values[columnIndex] ?? "").trim();
-                    if (["cap-diameter", "stem-height", "stem-width"].includes(feature)) {
-                        const number = Number(value);
-                        if (value === "" || !Number.isFinite(number) || number < 0) {
-                            throw new Error(`Row ${index + 2}: ${feature} must be a non-negative number.`);
+                    if (numericFeatures.has(feature)) {
+                        const number = value === "" ? null : Number(value);
+                        if (number !== null && (!Number.isFinite(number) || number < 0)) {
+                            throw new Error(`Row ${index + 2}: ${feature} must be a non-negative number or blank.`);
                         }
                         record[feature] = number;
                     } else {
@@ -1226,8 +1195,7 @@
         }
 
         function renderPreview(headers, records) {
-            const visibleHeaders = headers.filter((header) => features.includes(header));
-            const previewHeaders = visibleHeaders.slice(0, 8);
+            const previewHeaders = features;
             document.querySelector("#preview-head").replaceChildren();
             document.querySelector("#preview-body").replaceChildren();
             const headerRow = document.createElement("tr");
@@ -1242,7 +1210,7 @@
                 }
                 document.querySelector("#preview-body").append(tr);
             }
-            document.querySelector("#file-name").textContent = document.querySelector("#csv-file").files[0]?.name || "CSV file";
+            document.querySelector("#file-name").textContent = selectedCsvFile?.name || "CSV file";
             document.querySelector("#row-count").textContent = `${records.length} row${records.length === 1 ? "" : "s"} ready`;
             document.querySelector("#csv-preview").classList.remove("hidden");
             csvPredictButton.disabled = false;
@@ -1251,16 +1219,16 @@
         function handleCsvFile(file) {
             if (!file) return;
             document.querySelector("#csv-validation").classList.add("hidden");
-            csvRows = [];
+            selectedCsvFile = file;
             csvPredictButton.disabled = true;
             file.text().then((text) => {
                 const { headers, records } = parseCsv(text);
-                csvRows = records;
                 renderPreview(headers, records);
             }).catch((error) => {
                 document.querySelector("#csv-preview").classList.add("hidden");
                 document.querySelector("#csv-validation").textContent = error.message;
-                document.querySelector("#csv-validation").classList.remove("hidden", "error");
+                document.querySelector("#csv-validation").classList.remove("hidden");
+                document.querySelector("#csv-validation").classList.add("error");
                 showToast(error.message);
             });
         }
@@ -1275,69 +1243,82 @@
         }
         dropzone.addEventListener("drop", (event) => handleCsvFile(event.dataTransfer.files[0]));
 
-        function extractPrediction(value) {
-            if (value === null || value === undefined) return "No prediction field returned";
-            if (typeof value !== "object") return String(value);
-            for (const key of ["prediction", "class", "label", "result", "predicted_class"]) {
-                if (key in value) return typeof value[key] === "object" ? JSON.stringify(value[key]) : String(value[key]);
-            }
-            return "Response received";
-        }
-
-        function renderResults(results, errors, count) {
+        function renderPredictions(predictions, count) {
             resultContent.replaceChildren();
-            resultSubtitle.textContent = `${results.length} of ${count} row${count === 1 ? "" : "s"} predicted`;
-            if (errors.length) {
-                const message = document.createElement("p");
-                message.className = "result-message error";
-                message.textContent = `${errors.length} request${errors.length === 1 ? "" : "s"} failed. ${errors.slice(0, 2).join(" ")}`;
-                resultContent.append(message);
-            }
+            resultSubtitle.textContent = `${count} prediction${count === 1 ? "" : "s"} returned`;
             const list = document.createElement("div"); list.className = "result-list";
-            for (const result of results) {
+            for (const prediction of predictions) {
                 const item = document.createElement("div"); item.className = "result-item";
-                const label = document.createElement("strong"); label.textContent = result.label;
-                const value = document.createElement("span"); value.textContent = extractPrediction(result.value);
+                const label = document.createElement("strong");
+                label.textContent = prediction.prediction === "poisonous" ? "Poisonous" : "Edible";
+                const value = document.createElement("span");
+                const row = prediction.row ? `Row ${prediction.row} · ` : "";
+                const risk = Number(prediction.poisonous_probability);
+                value.textContent = `${row}${Number.isFinite(risk) ? `${(risk * 100).toFixed(1)}% poisonous probability` : "Prediction received"}`;
                 item.append(label, value); list.append(item);
             }
             resultContent.append(list);
-            const lastResponse = results.at(-1)?.value;
-            if (lastResponse !== undefined) {
-                const raw = document.createElement("pre"); raw.className = "result-json";
-                raw.textContent = JSON.stringify(lastResponse, null, 2);
-                resultContent.append(raw);
+        }
+
+        function showRequestError(error) {
+            resultContent.replaceChildren();
+            const message = document.createElement("p");
+            message.className = "result-message error";
+            message.textContent = error.message;
+            resultContent.append(message);
+            resultSubtitle.textContent = "Request failed";
+            showToast(`${error.message} Check the API URL and CORS settings.`);
+        }
+
+        function validateEndpoint() {
+            try {
+                const url = new URL(endpoint.value.trim());
+                if (!["http:", "https:"].includes(url.protocol)) throw new Error();
+                try { localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim()); } catch { }
+                return true;
+            } catch {
+                showToast("Enter a valid HTTP or HTTPS API base URL.");
+                endpoint.focus();
+                return false;
             }
         }
 
-        async function predictRecords(records, button, busyLabel) {
-            const url = endpoint.value.trim();
-            if (!url) { showToast("Enter your model API endpoint first."); endpoint.focus(); return; }
-            try { new URL(url); } catch { showToast("Enter a valid API URL."); endpoint.focus(); return; }
-            localStorage.setItem("fieldwork-api-endpoint", url);
-            setBusy(button, true, busyLabel);
-            resultSubtitle.textContent = "Sending observations to the model API";
-            resultContent.replaceChildren();
-            const progress = document.createElement("p"); progress.className = "result-message"; progress.textContent = `Predicting 0 of ${records.length}…`; resultContent.append(progress);
-            const results = [];
-            const errors = [];
-            for (let index = 0; index < records.length; index += 1) {
-                try {
-                    const response = await fetch(url, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(records[index])
-                    });
-                    const body = await response.json().catch(() => null);
-                    if (!response.ok) throw new Error(body?.detail || body?.message || `HTTP ${response.status}`);
-                    results.push({ label: `Row ${index + 1}`, value: body });
-                } catch (error) {
-                    errors.push(`Row ${index + 1}: ${error.message}`);
-                }
-                progress.textContent = `Predicting ${index + 1} of ${records.length}…`;
+        async function submitSpecimen(record, button) {
+            if (!validateEndpoint()) return;
+            setBusy(button, true, "Predicting…");
+            resultSubtitle.textContent = "Sending specimen to the model";
+            try {
+                const response = await fetch(apiUrl("/predict"), {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(record)
+                });
+                renderPredictions([await readApiResponse(response)], 1);
+            } catch (error) {
+                showRequestError(error);
+            } finally {
+                setBusy(button, false);
             }
-            renderResults(results, errors, records.length);
-            if (errors.length) showToast(`${errors.length} request${errors.length === 1 ? "" : "s"} failed. Check API availability and CORS settings.`);
-            setBusy(button, false);
+        }
+
+        async function submitCsv(button) {
+            if (!selectedCsvFile || !validateEndpoint()) return;
+            setBusy(button, true, "Uploading CSV…");
+            resultSubtitle.textContent = "Uploading CSV to the model API";
+            try {
+                const formData = new FormData();
+                formData.append("file", selectedCsvFile);
+                const response = await fetch(apiUrl("/predict/csv"), {
+                    method: "POST",
+                    body: formData
+                });
+                const body = await readApiResponse(response);
+                renderPredictions(body.predictions || [], body.count ?? 0);
+            } catch (error) {
+                showRequestError(error);
+            } finally {
+                setBusy(button, false);
+            }
         }
 
         form.addEventListener("submit", (event) => {
@@ -1345,14 +1326,14 @@
             const record = {};
             for (const feature of features) {
                 const field = form.elements.namedItem(feature);
-                record[feature] = field.type === "number" ? Number(field.value) : field.value;
+                record[feature] = numericFeatures.has(feature) ? Number(field.value) : field.value;
             }
             const button = form.querySelector("button[type=submit]");
-            predictRecords([record], button, "Predicting…");
+            submitSpecimen(record, button);
         });
 
         csvPredictButton.addEventListener("click", () => {
-            if (csvRows.length) predictRecords(csvRows, csvPredictButton, "Predicting rows…");
+            submitCsv(csvPredictButton);
         });
     </script>
 </body>

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f5f7f3">
     <title>Ctrl-Alt-Defeat | Applied ML Project</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <style>
         :root {
             color-scheme: light;
@@ -355,6 +357,50 @@
             margin: 5px 0 0;
             color: #89958f;
             font-size: 10px;
+        }
+
+        .station-picker {
+            display: grid;
+            gap: 10px;
+        }
+
+        .station-picker label {
+            color: #384943;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .station-picker select {
+            width: 100%;
+            height: 40px;
+            padding: 0 10px;
+            border: 1px solid #d8e1db;
+            border-radius: 5px;
+            background: #fff;
+            color: var(--ink);
+            font-size: 13px;
+        }
+
+        .station-map {
+            z-index: 0;
+            width: 100%;
+            height: 360px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: #e7eee9;
+        }
+
+        .station-picker-status,
+        .station-selection {
+            margin: 0;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .station-selection {
+            color: var(--green-deep);
+            font-weight: 650;
         }
 
         .required-mark {
@@ -888,6 +934,10 @@
                 padding: 16px;
             }
 
+            .station-map {
+                height: 300px;
+            }
+
             .submit-row,
             .upload-footer {
                 align-items: stretch;
@@ -1062,14 +1112,24 @@
                                 <div class="fields">
                                     <div class="field"><label for="trip-date">Trip date</label><input id="trip-date"
                                             name="trip_date" type="date" value="2013-06-01" required></div>
-                                    <div class="field"><label for="start-lat">Station latitude <span class="unit">°</span></label>
-                                        <input id="start-lat" name="start_lat" type="number" step="any" min="-90" max="90"
-                                            value="40.741776" required></div>
-                                    <div class="field"><label for="start-lng">Station longitude <span class="unit">°</span></label>
-                                        <input id="start-lng" name="start_lng" type="number" step="any" min="-180" max="180"
-                                            value="-74.001497" required></div>
+                                    <input id="start-lat" name="start_lat" type="hidden" value="40.741776">
+                                    <input id="start-lng" name="start_lng" type="hidden" value="-74.001497">
                                 </div>
-                                <p class="field-hint">Coordinates should describe the starting Citi Bike station.</p>
+                                <div class="station-picker">
+                                    <label for="station-search">Search stations by name</label>
+                                    <input id="station-search" type="search" placeholder="Start typing a station name…"
+                                        autocomplete="off" disabled>
+                                    <label for="station-select">Or choose from the station list</label>
+                                    <select id="station-select" disabled>
+                                        <option>Loading Citi Bike stations…</option>
+                                    </select>
+                                    <div id="station-map" class="station-map" role="region"
+                                        aria-label="Map of Citi Bike stations in New York" tabindex="0"></div>
+                                    <p id="station-picker-status" class="station-picker-status" role="status">
+                                        Loading station locations…
+                                    </p>
+                                    <p id="station-selection" class="station-selection">Select a station on the map or from the list.</p>
+                                </div>
                             </div>
                             <div class="group">
                                 <h3 class="group-title">Daily trip counts</h3>
@@ -1133,11 +1193,13 @@
             </section>
         </main>
 
-        <footer class="footer"><span>CTRL-ALT-DEFEAT · BACHELOR PROJECT</span><span>Rune Lemmens · Lex Renders ·
+        <footer class="footer"><span>CTRL-ALT-DEFEAT · BACHELOR PROJECT</span><span>Pamela Barbosa · Rune Lemmens · Lex Renders ·
                 Liam Wozniak</span></footer>
     </div>
     <div id="toast" class="toast hidden" role="status"></div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
         const features = [
             "cap-diameter", "stem-height", "stem-width", "gill-color", "habitat",
@@ -1156,6 +1218,11 @@
 
         const form = document.querySelector("#specimen-form");
         const citibikeForm = document.querySelector("#citibike-form");
+        const stationSearch = document.querySelector("#station-search");
+        const stationSelect = document.querySelector("#station-select");
+        const stationPickerStatus = document.querySelector("#station-picker-status");
+        const stationSelection = document.querySelector("#station-selection");
+        const bikeSubmitButton = citibikeForm.querySelector("button[type=submit]");
         const resultContent = document.querySelector("#result-content");
         const resultSubtitle = document.querySelector("#result-subtitle");
         const fileInput = document.querySelector("#csv-file");
@@ -1169,12 +1236,38 @@
         const endpointState = document.querySelector(".endpoint-state");
         let selectedModel = "mushroom";
         let selectedCsvFile = null;
+        let stations = [];
+        let selectedStation = null;
+        let stationMap = null;
+        let stationMarkerLayer = null;
+        let stationRenderer = null;
+        let stationMarkers = new Map();
         let toastTimer;
 
         const localHosts = new Set(["localhost", "127.0.0.1"]);
         const apiBaseUrl = localHosts.has(window.location.hostname)
             ? "http://localhost:8000"
             : "https://d16mi61bdk4mg3.cloudfront.net";
+        const stationFeedUrl = "https://gbfs.citibikenyc.com/gbfs/en/station_information.json";
+
+        if (window.L) {
+            stationMap = L.map("station-map").setView([40.73, -73.98], 12);
+            stationRenderer = L.canvas({padding: 0.5});
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(stationMap);
+            stationMap.on("click", (event) => {
+                const nearest = findNearestStation(event.latlng.lat, event.latlng.lng);
+                if (!nearest || nearest.distanceKm > 0.25) {
+                    showToast("Click closer to a Citi Bike station marker to select it.");
+                    return;
+                }
+                selectStation(nearest.station);
+            });
+        } else {
+            stationPickerStatus.textContent = "The map library could not load. You can still search for a station below.";
+        }
 
         for (const [name, values] of Object.entries(options)) {
             const select = form.elements.namedItem(name);
@@ -1230,6 +1323,14 @@
                 ? "Waiting for a specimen"
                 : "Waiting for a station-day";
             resultContent.innerHTML = `<div class="empty-state"><div class="empty-mark" aria-hidden="true"></div><strong>Ready for an observation</strong><p>${isMushroom ? "Submit mushroom traits or upload a dataset to see the classifier output." : "Submit station and rider data to estimate the mean trip duration."}</p></div>`;
+            if (!isMushroom && stationMap) {
+                requestAnimationFrame(() => {
+                    stationMap.invalidateSize();
+                    if (stationMarkerLayer) {
+                        stationMap.fitBounds(stationMarkerLayer.getBounds().pad(0.08));
+                    }
+                });
+            }
             checkApiConnection();
         }
 
@@ -1243,6 +1344,147 @@
             clearTimeout(toastTimer);
             toastTimer = setTimeout(() => toast.classList.add("hidden"), 3600);
         }
+
+        function distanceInKm(lat1, lng1, lat2, lng2) {
+            const radians = (degrees) => degrees * Math.PI / 180;
+            const latitudeDelta = radians(lat2 - lat1);
+            const longitudeDelta = radians(lng2 - lng1);
+            const haversine = Math.sin(latitudeDelta / 2) ** 2
+                + Math.cos(radians(lat1)) * Math.cos(radians(lat2))
+                * Math.sin(longitudeDelta / 2) ** 2;
+            return 6371 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
+        }
+
+        function findNearestStation(latitude, longitude) {
+            let nearest = null;
+            for (const station of stations) {
+                const distanceKm = distanceInKm(latitude, longitude, station.lat, station.lon);
+                if (!nearest || distanceKm < nearest.distanceKm) {
+                    nearest = {station, distanceKm};
+                }
+            }
+            return nearest;
+        }
+
+        function populateStationOptions() {
+            const query = stationSearch.value.trim().toLocaleLowerCase();
+            const matches = stations.filter((station) =>
+                station.name.toLocaleLowerCase().includes(query)
+                || (station.shortName && station.shortName.toLocaleLowerCase().includes(query))
+            );
+            stationSelect.replaceChildren();
+            const placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = query
+                ? `${matches.length} matching station${matches.length === 1 ? "" : "s"}`
+                : "Choose a station…";
+            stationSelect.append(placeholder);
+            if (selectedStation) {
+                const current = document.createElement("option");
+                current.value = selectedStation.id;
+                current.textContent = `Selected: ${selectedStation.name}`;
+                current.selected = true;
+                stationSelect.append(current);
+            }
+            for (const station of matches) {
+                if (selectedStation && station.id === selectedStation.id) continue;
+                const option = document.createElement("option");
+                option.value = station.id;
+                option.textContent = station.shortName
+                    ? `${station.name} · ${station.shortName}`
+                    : station.name;
+                stationSelect.append(option);
+            }
+            stationSelect.value = selectedStation?.id ?? "";
+        }
+
+        function selectStation(station, moveMap = false) {
+            selectedStation = station;
+            document.querySelector("#start-lat").value = String(station.lat);
+            document.querySelector("#start-lng").value = String(station.lon);
+            stationSelection.textContent = `${station.name} · ${station.lat.toFixed(5)}, ${station.lon.toFixed(5)}`;
+            bikeSubmitButton.disabled = false;
+            for (const [id, marker] of stationMarkers) {
+                marker.setStyle({
+                    color: "#ffffff",
+                    fillColor: id === station.id ? "#e66d45" : "#23624f",
+                    weight: id === station.id ? 3 : 2
+                });
+            }
+            populateStationOptions();
+            if (moveMap && stationMap) {
+                stationMap.flyTo([station.lat, station.lon], Math.max(stationMap.getZoom(), 15));
+            }
+        }
+
+        async function loadStations() {
+            try {
+                const response = await fetch(stationFeedUrl);
+                if (!response.ok) throw new Error(`Station feed returned HTTP ${response.status}.`);
+                const payload = await response.json();
+                const feedStations = payload?.data?.stations;
+                if (!Array.isArray(feedStations) || feedStations.length === 0) {
+                    throw new Error("The station feed did not contain any stations.");
+                }
+                stations = feedStations
+                    .filter((station) =>
+                        station.station_id
+                        && station.name
+                        && Number.isFinite(Number(station.lat))
+                        && Number.isFinite(Number(station.lon))
+                    )
+                    .map((station) => ({
+                        id: String(station.station_id),
+                        name: String(station.name),
+                        shortName: station.short_name ? String(station.short_name) : "",
+                        lat: Number(station.lat),
+                        lon: Number(station.lon)
+                    }))
+                    .sort((first, second) => first.name.localeCompare(second.name));
+                if (stations.length === 0) throw new Error("No valid station locations were returned.");
+
+                stationSearch.disabled = false;
+                stationSelect.disabled = false;
+                const initial = findNearestStation(40.741776, -74.001497);
+                if (stationMap) {
+                    const markers = L.featureGroup();
+                    stationMarkerLayer = markers;
+                    for (const station of stations) {
+                        const marker = L.circleMarker([station.lat, station.lon], {
+                            radius: selectedStation?.id === station.id ? 7 : 3.5,
+                            color: "#ffffff",
+                            weight: selectedStation?.id === station.id ? 2.5 : 1,
+                            fillColor: "#23624f",
+                            fillOpacity: 0.75,
+                            bubblingMouseEvents: false,
+                            renderer: stationRenderer
+                        });
+                        marker.on("click", () => selectStation(station));
+                        marker.addTo(markers);
+                        stationMarkers.set(station.id, marker);
+                    }
+                    markers.addTo(stationMap);
+                    if (!citibikePane.classList.contains("hidden")) {
+                        stationMap.fitBounds(markers.getBounds().pad(0.08));
+                    }
+                }
+                if (initial) selectStation(initial.station);
+                stationPickerStatus.textContent = stationMap
+                    ? `${stations.length.toLocaleString()} live Citi Bike stations. Select one from the list or click a map marker.`
+                    : `${stations.length.toLocaleString()} live stations loaded. The map library is unavailable; use the search and station list.`;
+            } catch (error) {
+                stationPickerStatus.textContent = `Could not load Citi Bike stations: ${error.message}`;
+                stationSelect.disabled = true;
+                bikeSubmitButton.disabled = true;
+            }
+        }
+
+        stationSearch.addEventListener("input", populateStationOptions);
+        stationSelect.addEventListener("change", () => {
+            const station = stations.find((item) => item.id === stationSelect.value);
+            if (station) selectStation(station, true);
+        });
+        void loadStations();
 
         function setBusy(button, busy, label) {
             button.disabled = busy;

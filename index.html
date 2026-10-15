@@ -987,22 +987,17 @@
         <header class="topbar">
             <div class="brand"><span class="brand-mark" aria-hidden="true">C</span><span>CTRL-ALT-DEFEAT <span
                         style="color:var(--muted);font-weight:500">/ APPLIED ML</span></span></div>
-            <div class="top-status"><span class="status-dot" aria-hidden="true"></span><span>Bachelor project</span>
+            <div class="top-status"><span class="status-dot" aria-hidden="true"></span><span>Project</span>
                 <span>·</span><span>Model inference</span></div>
         </header>
 
         <main>
             <section class="intro" aria-labelledby="page-title">
                 <div>
-                    <p class="eyebrow">Bachelor project · Machine learning</p>
+                    <p class="eyebrow">Project · Machine learning</p>
                     <h1 id="page-title">From data to decisions.</h1>
                     <p class="intro-copy">Explore two applied machine-learning models built by Ctrl-Alt-Defeat:
                         mushroom edibility classification and Citi Bike trip-duration prediction.</p>
-                    <div class="project-facts" aria-label="Project overview">
-                        <span>Supervised learning</span>
-                        <span>Two model tracks</span>
-                        <span>Public datasets</span>
-                    </div>
                 </div>
                 <div class="model-switch" role="group" aria-label="Choose a model">
                     <button id="mushroom-model" class="model-button" type="button" aria-pressed="true"><span class="model-index">01</span>
@@ -1146,12 +1141,12 @@
                                             name="gender_1_trip_count" type="number" min="0" step="1" value="26" required></div>
                                     <div class="field"><label for="gender-female">Female riders</label><input id="gender-female"
                                             name="gender_2_trip_count" type="number" min="0" step="1" value="21" required></div>
-                                    <div class="field"><label for="mean-birth-year">Mean birth year</label><input id="mean-birth-year"
-                                            name="mean_birth_year" type="number" min="1900" max="2026" step="any"
-                                            value="1975.4" required></div>
+                                    <div class="field"><label for="average-age">Average rider age</label><input id="average-age"
+                                            name="average_age" type="number" min="0" max="120" step="any"
+                                            value="37.6" required></div>
                                 </div>
-                                <p class="field-hint">Use the station-day totals and rider counts from your dataset. The
-                                    sample values are a real observation from 1 June 2013.</p>
+                                <p class="field-hint">Enter average rider age. We calculate the mean birth year from
+                                    the selected trip date. The sample values are a real observation from 1 June 2013.</p>
                             </div>
                             <div class="submit-row">
                                 <p class="subtle-note">Predicted output is the mean trip duration for this station-day.</p>
@@ -1193,7 +1188,7 @@
             </section>
         </main>
 
-        <footer class="footer"><span>CTRL-ALT-DEFEAT · BACHELOR PROJECT</span><span>Pamela Barbosa · Rune Lemmens · Lex Renders ·
+        <footer class="footer"><span>CTRL-ALT-DEFEAT · PROJECT</span><span>Pamela Barbosa · Rune Lemmens · Lex Renders ·
                 Liam Wozniak</span></footer>
     </div>
     <div id="toast" class="toast hidden" role="status"></div>
@@ -1760,6 +1755,9 @@
             for (const [name, value] of Object.entries(record)) {
                 if (name !== "trip_date") record[name] = Number(value);
             }
+            const tripYear = Number(record.trip_date.slice(0, 4));
+            record.mean_birth_year = tripYear - record.average_age;
+            delete record.average_age;
             const button = citibikeForm.querySelector("button[type=submit]");
             submitBikeDay(record, button);
         });

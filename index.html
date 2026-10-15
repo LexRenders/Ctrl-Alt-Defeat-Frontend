@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f5f7f3">
-    <title>Fieldwork | Model studio</title>
+    <title>Ctrl-Alt-Defeat | Applied ML Project</title>
     <style>
         :root {
             color-scheme: light;
@@ -139,6 +139,25 @@
             color: var(--muted);
             font-size: 15px;
             line-height: 1.55;
+        }
+
+        .project-facts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 16px;
+        }
+
+        .project-facts span {
+            padding: 6px 9px;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            background: rgb(255 255 255 / 72%);
+            color: #52645b;
+            font-size: 10px;
+            font-weight: 750;
+            letter-spacing: .04em;
+            text-transform: uppercase;
         }
 
         .model-switch {
@@ -312,8 +331,7 @@
         }
 
         .field input,
-        .field select,
-        .endpoint-input {
+        .field select {
             width: 100%;
             height: 39px;
             padding: 0 10px;
@@ -535,22 +553,11 @@
             text-transform: uppercase;
         }
 
-        .endpoint-input {
-            height: 37px;
-            font-family: "Cascadia Code", Consolas, monospace;
-            font-size: 12px;
-        }
-
         .endpoint-caption {
             margin: 9px 0 0;
             color: var(--muted);
             font-size: 11px;
             line-height: 1.5;
-        }
-
-        .endpoint-caption code {
-            color: var(--green-deep);
-            font-family: "Cascadia Code", Consolas, monospace;
         }
 
         .endpoint-state {
@@ -570,6 +577,38 @@
             border-radius: 50%;
             background: var(--orange);
             content: "";
+        }
+
+        .endpoint-state.connected::before {
+            background: #4b9b70;
+        }
+
+        .bike-result {
+            display: grid;
+            gap: 8px;
+            padding: 19px;
+            border: 1px solid var(--line);
+            border-radius: 7px;
+            background: linear-gradient(135deg, #f7faf6, #edf4ee);
+        }
+
+        .bike-result-value {
+            color: var(--green-deep);
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(32px, 5vw, 46px);
+            font-weight: 500;
+            letter-spacing: -.03em;
+        }
+
+        .bike-result > span {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .bike-result .subtle-note {
+            padding-top: 11px;
+            border-top: 1px solid var(--line);
         }
 
         .result-panel {
@@ -896,35 +935,40 @@
 <body>
     <div class="shell">
         <header class="topbar">
-            <div class="brand"><span class="brand-mark" aria-hidden="true">f</span><span>FIELDWORK <span
-                        style="color:var(--muted);font-weight:500">/ MODEL STUDIO</span></span></div>
-            <div class="top-status"><span class="status-dot" aria-hidden="true"></span><span>Mushroom
-                    model</span><span>·</span><span>API connection required</span></div>
+            <div class="brand"><span class="brand-mark" aria-hidden="true">C</span><span>CTRL-ALT-DEFEAT <span
+                        style="color:var(--muted);font-weight:500">/ APPLIED ML</span></span></div>
+            <div class="top-status"><span class="status-dot" aria-hidden="true"></span><span>Bachelor project</span>
+                <span>·</span><span>Model inference</span></div>
         </header>
 
         <main>
             <section class="intro" aria-labelledby="page-title">
                 <div>
-                    <p class="eyebrow">Inference workspace / 01</p>
-                    <h1 id="page-title">Read the specimen.</h1>
-                    <p class="intro-copy">Enter the measurements and observed traits, or upload a dataset, to get an
-                        edibility prediction from the trained classifier.</p>
+                    <p class="eyebrow">Bachelor project · Machine learning</p>
+                    <h1 id="page-title">From data to decisions.</h1>
+                    <p class="intro-copy">Explore two applied machine-learning models built by Ctrl-Alt-Defeat:
+                        mushroom edibility classification and Citi Bike trip-duration prediction.</p>
+                    <div class="project-facts" aria-label="Project overview">
+                        <span>Supervised learning</span>
+                        <span>Two model tracks</span>
+                        <span>Public datasets</span>
+                    </div>
                 </div>
                 <div class="model-switch" role="group" aria-label="Choose a model">
-                    <button class="model-button" type="button" aria-pressed="true"><span class="model-index">01</span>
+                    <button id="mushroom-model" class="model-button" type="button" aria-pressed="true"><span class="model-index">01</span>
                         Mushroom</button>
-                    <button class="model-button" type="button" disabled aria-label="Citi Bike model unavailable"><span
-                            class="model-index">02</span> Citi Bike <span aria-hidden="true">·</span> soon</button>
+                    <button id="citibike-model" class="model-button" type="button" aria-pressed="false"><span
+                            class="model-index">02</span> Citi Bike</button>
                 </div>
             </section>
 
-            <section class="workspace" aria-label="Mushroom prediction">
+            <section id="workspace" class="workspace" aria-label="Mushroom prediction">
                 <section class="panel" aria-labelledby="input-title">
                     <div class="panel-heading">
                         <div>
-                            <p class="step-label">SPECIMEN INPUT</p>
+                            <p id="input-kicker" class="step-label">MODEL 01 · CLASSIFICATION</p>
                             <h2 id="input-title">Build an observation</h2>
-                            <p>Enter the nine features used by the deployed model.</p>
+                            <p id="input-description">Enter the nine features used by the trained classifier.</p>
                         </div>
                         <div class="mode-tabs" role="tablist" aria-label="Input method">
                             <button id="form-tab" type="button" role="tab" aria-selected="true"
@@ -1010,16 +1054,60 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="citibike-pane" class="hidden">
+                        <form id="citibike-form" class="form-body">
+                            <div class="group">
+                                <h3 class="group-title">Station &amp; date</h3>
+                                <div class="fields">
+                                    <div class="field"><label for="trip-date">Trip date</label><input id="trip-date"
+                                            name="trip_date" type="date" value="2013-06-01" required></div>
+                                    <div class="field"><label for="start-lat">Station latitude <span class="unit">°</span></label>
+                                        <input id="start-lat" name="start_lat" type="number" step="any" min="-90" max="90"
+                                            value="40.741776" required></div>
+                                    <div class="field"><label for="start-lng">Station longitude <span class="unit">°</span></label>
+                                        <input id="start-lng" name="start_lng" type="number" step="any" min="-180" max="180"
+                                            value="-74.001497" required></div>
+                                </div>
+                                <p class="field-hint">Coordinates should describe the starting Citi Bike station.</p>
+                            </div>
+                            <div class="group">
+                                <h3 class="group-title">Daily trip counts</h3>
+                                <div class="fields">
+                                    <div class="field"><label for="trip-count">Total trips</label><input id="trip-count"
+                                            name="trip_count" type="number" min="1" step="1" value="51" required></div>
+                                    <div class="field"><label for="casual-count">Casual riders</label><input id="casual-count"
+                                            name="casual_trip_count" type="number" min="0" step="1" value="21" required></div>
+                                    <div class="field"><label for="member-count">Members</label><input id="member-count"
+                                            name="member_trip_count" type="number" min="0" step="1" value="30" required></div>
+                                    <div class="field"><label for="gender-unknown">Unknown gender</label><input id="gender-unknown"
+                                            name="gender_0_trip_count" type="number" min="0" step="1" value="4" required></div>
+                                    <div class="field"><label for="gender-male">Male riders</label><input id="gender-male"
+                                            name="gender_1_trip_count" type="number" min="0" step="1" value="26" required></div>
+                                    <div class="field"><label for="gender-female">Female riders</label><input id="gender-female"
+                                            name="gender_2_trip_count" type="number" min="0" step="1" value="21" required></div>
+                                    <div class="field"><label for="mean-birth-year">Mean birth year</label><input id="mean-birth-year"
+                                            name="mean_birth_year" type="number" min="1900" max="2026" step="any"
+                                            value="1975.4" required></div>
+                                </div>
+                                <p class="field-hint">Use the station-day totals and rider counts from your dataset. The
+                                    sample values are a real observation from 1 June 2013.</p>
+                            </div>
+                            <div class="submit-row">
+                                <p class="subtle-note">Predicted output is the mean trip duration for this station-day.</p>
+                                <button class="primary-button" type="submit">Predict trip duration <span
+                                        aria-hidden="true">→</span></button>
+                            </div>
+                        </form>
+                    </div>
                 </section>
 
                 <aside class="side-column" aria-label="Endpoint and prediction results">
                     <section class="panel endpoint-panel">
-                        <div class="section-label"><label for="endpoint">API base URL</label><span
+                        <div class="section-label"><span>Model API</span><span
                                 class="endpoint-state">Not connected</span></div>
-                        <input id="endpoint" class="endpoint-input" type="url"
-                            value="https://d16mi61bdk4mg3.cloudfront.net" autocomplete="url" spellcheck="false">
-                        <p class="endpoint-caption">The page calls <code>/predict</code> and <code>/predict/csv</code>
-                            on this base URL. For AWS, include any API stage in the base URL.</p>
+                        <p class="endpoint-caption">The fixed project API serves both prediction models. The selected
+                            model determines which endpoint is used.</p>
                     </section>
 
                     <section class="panel result-panel" aria-live="polite" aria-labelledby="result-title">
@@ -1037,16 +1125,16 @@
                     </section>
 
                     <section class="notice">
-                        <strong>Model availability</strong>
-                        <p>Mushroom inference uses the deployed API. The Citi Bike model is not available yet. Model
-                            predictions are not food-safety advice.</p>
+                        <strong>About this project</strong>
+                        <p>Ctrl-Alt-Defeat applies supervised learning to public mushroom and Citi Bike data.
+                            Predictions are educational model outputs, not professional advice.</p>
                     </section>
                 </aside>
             </section>
         </main>
 
-        <footer class="footer"><span>FIELDWORK · GOING GREEN</span><span>Model outputs are predictions, not food-safety
-                advice.</span></footer>
+        <footer class="footer"><span>CTRL-ALT-DEFEAT · BACHELOR PROJECT</span><span>Rune Lemmens · Lex Renders ·
+                Liam Wozniak</span></footer>
     </div>
     <div id="toast" class="toast hidden" role="status"></div>
 
@@ -1067,13 +1155,26 @@
         };
 
         const form = document.querySelector("#specimen-form");
-        const endpoint = document.querySelector("#endpoint");
+        const citibikeForm = document.querySelector("#citibike-form");
         const resultContent = document.querySelector("#result-content");
         const resultSubtitle = document.querySelector("#result-subtitle");
         const fileInput = document.querySelector("#csv-file");
         const csvPredictButton = document.querySelector("#predict-csv");
+        const mushroomModelButton = document.querySelector("#mushroom-model");
+        const citibikeModelButton = document.querySelector("#citibike-model");
+        const mushroomPane = document.querySelector("#form-pane");
+        const csvPane = document.querySelector("#csv-pane");
+        const citibikePane = document.querySelector("#citibike-pane");
+        const modeTabs = document.querySelector(".mode-tabs");
+        const endpointState = document.querySelector(".endpoint-state");
+        let selectedModel = "mushroom";
         let selectedCsvFile = null;
         let toastTimer;
+
+        const localHosts = new Set(["localhost", "127.0.0.1"]);
+        const apiBaseUrl = localHosts.has(window.location.hostname)
+            ? "http://localhost:8000"
+            : "https://d16mi61bdk4mg3.cloudfront.net";
 
         for (const [name, values] of Object.entries(options)) {
             const select = form.elements.namedItem(name);
@@ -1090,12 +1191,6 @@
             }
         }
 
-        const savedEndpoint = localStorage.getItem("fieldwork-api-endpoint");
-        if (savedEndpoint) endpoint.value = savedEndpoint;
-        endpoint.addEventListener("change", () => {
-            try {localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim());} catch { }
-        });
-
         document.querySelectorAll("[role=tab]").forEach((tab) => {
             tab.addEventListener("click", () => {
                 for (const other of document.querySelectorAll("[role=tab]")) {
@@ -1105,6 +1200,41 @@
                 }
             });
         });
+
+        function selectModel(model) {
+            selectedModel = model;
+            const isMushroom = model === "mushroom";
+            mushroomModelButton.setAttribute("aria-pressed", String(isMushroom));
+            citibikeModelButton.setAttribute("aria-pressed", String(!isMushroom));
+            mushroomPane.classList.toggle("hidden", !isMushroom || document.querySelector("#form-tab").getAttribute("aria-selected") !== "true");
+            csvPane.classList.toggle("hidden", !isMushroom || document.querySelector("#csv-tab").getAttribute("aria-selected") !== "true");
+            citibikePane.classList.toggle("hidden", isMushroom);
+            modeTabs.classList.toggle("hidden", !isMushroom);
+            document.querySelector("#workspace").setAttribute(
+                "aria-label",
+                isMushroom ? "Mushroom prediction" : "Citi Bike trip-duration prediction"
+            );
+            document.querySelector("#input-kicker").textContent = isMushroom
+                ? "MODEL 01 · CLASSIFICATION"
+                : "MODEL 02 · REGRESSION";
+            document.querySelector("#input-title").textContent = isMushroom
+                ? "Build an observation"
+                : "Describe a station-day";
+            document.querySelector("#input-description").textContent = isMushroom
+                ? "Enter the nine features used by the trained classifier."
+                : "Enter a station location, trip date and daily rider counts.";
+            document.querySelector("#result-title").textContent = isMushroom
+                ? "Mushroom classification"
+                : "Predicted trip duration";
+            resultSubtitle.textContent = isMushroom
+                ? "Waiting for a specimen"
+                : "Waiting for a station-day";
+            resultContent.innerHTML = `<div class="empty-state"><div class="empty-mark" aria-hidden="true"></div><strong>Ready for an observation</strong><p>${isMushroom ? "Submit mushroom traits or upload a dataset to see the classifier output." : "Submit station and rider data to estimate the mean trip duration."}</p></div>`;
+            checkApiConnection();
+        }
+
+        mushroomModelButton.addEventListener("click", () => selectModel("mushroom"));
+        citibikeModelButton.addEventListener("click", () => selectModel("citibike"));
 
         function showToast(message) {
             const toast = document.querySelector("#toast");
@@ -1121,13 +1251,25 @@
         }
 
         function apiUrl(path) {
-            const url = new URL(endpoint.value.trim());
-            url.pathname = url.pathname
-                .replace(/\/+$/, "")
-                .replace(/\/predict(?:\/csv)?$/, "") + path;
-            url.search = "";
-            url.hash = "";
-            return url.toString();
+            return new URL(path, `${apiBaseUrl}/`).toString();
+        }
+
+        async function checkApiConnection() {
+            endpointState.textContent = "Checking API";
+            endpointState.classList.remove("connected");
+            try {
+                const response = await fetch(apiUrl("/health"));
+                const health = await readApiResponse(response);
+                if (selectedModel === "citibike" && health.citibike_available === false) {
+                    throw new Error("Citi Bike model is not loaded by this API.");
+                }
+                endpointState.textContent = selectedModel === "citibike"
+                    ? "Citi Bike ready"
+                    : "API connected";
+                endpointState.classList.add("connected");
+            } catch {
+                endpointState.textContent = "API unavailable";
+            }
         }
 
         async function readApiResponse(response) {
@@ -1260,6 +1402,30 @@
             resultContent.append(list);
         }
 
+        function renderBikePrediction(prediction) {
+            const totalSeconds = Number(prediction.predicted_mean_duration_seconds);
+            if (!Number.isFinite(totalSeconds) || totalSeconds < 0) {
+                throw new Error("The Citi Bike API returned an invalid duration.");
+            }
+            const roundedSeconds = Math.round(totalSeconds);
+            const minutes = Math.floor(roundedSeconds / 60);
+            const seconds = roundedSeconds % 60;
+            resultContent.replaceChildren();
+            resultSubtitle.textContent = "Regression estimate · one station-day";
+            const card = document.createElement("div");
+            card.className = "bike-result";
+            const value = document.createElement("strong");
+            value.className = "bike-result-value";
+            value.textContent = `${minutes} min ${seconds} sec`;
+            const detail = document.createElement("span");
+            detail.textContent = `${roundedSeconds.toLocaleString()} seconds total`;
+            const note = document.createElement("p");
+            note.className = "subtle-note";
+            note.textContent = "Estimated mean trip duration from the trained Citi Bike model.";
+            card.append(value, detail, note);
+            resultContent.append(card);
+        }
+
         function showRequestError(error) {
             resultContent.replaceChildren();
             const message = document.createElement("p");
@@ -1270,25 +1436,11 @@
             showToast(`${error.message} Check the API URL and CORS settings.`);
         }
 
-        function validateEndpoint() {
-            try {
-                const url = new URL(endpoint.value.trim());
-                if (!["http:", "https:"].includes(url.protocol)) throw new Error();
-                try {localStorage.setItem("fieldwork-api-endpoint", endpoint.value.trim());} catch { }
-                return true;
-            } catch {
-                showToast("Enter a valid HTTP or HTTPS API base URL.");
-                endpoint.focus();
-                return false;
-            }
-        }
-
         async function submitSpecimen(record, button) {
-            if (!validateEndpoint()) return;
             setBusy(button, true, "Predicting…");
             resultSubtitle.textContent = "Sending specimen to the model";
             try {
-                const response = await fetch(apiUrl("/predict"), {
+                const response = await fetch(apiUrl("/mushroom/predict"), {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(record)
@@ -1302,18 +1454,41 @@
         }
 
         async function submitCsv(button) {
-            if (!selectedCsvFile || !validateEndpoint()) return;
+            if (!selectedCsvFile) return;
             setBusy(button, true, "Uploading CSV…");
             resultSubtitle.textContent = "Uploading CSV to the model API";
             try {
                 const formData = new FormData();
                 formData.append("file", selectedCsvFile);
-                const response = await fetch(apiUrl("/predict/csv"), {
+                const response = await fetch(apiUrl("/mushroom/predict/csv"), {
                     method: "POST",
                     body: formData
                 });
                 const body = await readApiResponse(response);
                 renderPredictions(body.predictions || [], body.count ?? 0);
+            } catch (error) {
+                showRequestError(error);
+            } finally {
+                setBusy(button, false);
+            }
+        }
+
+        async function submitBikeDay(record, button) {
+            const total = record.trip_count;
+            if (record.casual_trip_count + record.member_trip_count > total
+                || record.gender_0_trip_count + record.gender_1_trip_count + record.gender_2_trip_count > total) {
+                showToast("Rider category counts cannot exceed the total trip count.");
+                return;
+            }
+            setBusy(button, true, "Estimating…");
+            resultSubtitle.textContent = "Sending station-day to the regression model";
+            try {
+                const response = await fetch(apiUrl("/citibike/predict"), {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(record)
+                });
+                renderBikePrediction(await readApiResponse(response));
             } catch (error) {
                 showRequestError(error);
             } finally {
@@ -1335,6 +1510,19 @@
         csvPredictButton.addEventListener("click", () => {
             submitCsv(csvPredictButton);
         });
+
+        citibikeForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const formData = new FormData(citibikeForm);
+            const record = Object.fromEntries(formData.entries());
+            for (const [name, value] of Object.entries(record)) {
+                if (name !== "trip_date") record[name] = Number(value);
+            }
+            const button = citibikeForm.querySelector("button[type=submit]");
+            submitBikeDay(record, button);
+        });
+
+        checkApiConnection();
     </script>
 </body>
 
